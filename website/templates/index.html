@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Contact V18</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+<!--===============================================================================================-->
+	<link rel="icon" type="image/png" href="../static/images/icons/favicon.ico"/>
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="../static/vendor/bootstrap/css/bootstrap.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="../static/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="../static/fonts/Linearicons-Free-v1.0.0/icon-font.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="../static/vendor/animate/animate.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="../static/vendor/css-hamburgers/hamburgers.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="../static/vendor/animsition/css/animsition.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="../static/vendor/select2/select2.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="../static/vendor/daterangepicker/daterangepicker.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="../static/css/util.css">
+	<link rel="stylesheet" type="text/css" href="../static/css/main.css">
+	<!-- Load Chart.js -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js"></script>
+
+			<!--===============================================================================================-->
+<script type="text/javascript">
+					 function alertFilename()
+					 {
+							 var thefile = document.getElementById('file-upload');
+			         document.getElementById('file-name-label').innerHTML = thefile.value;
+							 // document.getElementById("uplaod-area").style.display = "none";
+
+							 // alert(thefile.value);
+					 }
+					 function toggleViews()
+					{
+						document.getElementById("uplaod-area").style.display = "block";
+						document.getElementById("chartArea").style.display = "none";
+					}
+			 </script>
+</head>
+<body>
+
+
+	<div class="container-contact100">
+		<div class="wrap-contact100">
+			<!-- <form method="post" action="http://127.0.0.1:5000/upload" enctype="multipart/form-data">
+			    <dl>
+					<p>
+						<input type="file" name="file" autocomplete="off" required>
+					</p>
+			    </dl>
+			    <p>
+					<input type="submit" value="Submit">
+				</p>
+			</form> -->
+			<form class="contact100-form validate-form" method="post" action="/" enctype="multipart/form-data">
+				<div id="uplaod-area">
+
+				<span class="contact100-form-title">
+					Uplaod SNPs to predict eye color
+				</span>
+				<div>
+					<label id="data" style="display: none;" >{{ get_flashed_messages() }}</label>
+				</div>
+<!-- -->
+
+
+					<label id="file-name-label"  class="custom-file-upload" for="file-upload">
+          <i class="fa fa-cloud-upload"></i> Select File to upload
+          </label>
+          <input id="file-upload" onchange="alertFilename()"  type="file" name="file" autocomplete="off" required>
+
+					<!-- <label class="label-input100" for="name">Full name</label>
+					<input id="name" class="input100" type="file" name="name" placeholder="Enter your name...">
+					<span class="focus-input100"></span> -->
+
+
+				<div class="container-contact100-form-btn">
+					<button class="contact100-form-btn" onclick="">
+						Uplaod
+					</button>
+				</div>
+			</div>
+			<div id="chartArea">
+				<canvas id="myChart" width="400" height="400"></canvas>
+				<button class="contact100-form-btn" onclick="toggleViews()">
+					Upload new file
+				</button>
+			</div>
+			</form>
+
+			<div class="contact100-more flex-col-c-m" style="background-image: url('../static/images/bg-01.jpg');">
+			</div>
+		</div>
+	</div>
+
+
+
+
+
+<!--===============================================================================================-->
+	<script src="../static/vendor/jquery/jquery-3.2.1.min.js"></script>
+<!--===============================================================================================-->
+	<script src="../static/vendor/animsition/js/animsition.min.js"></script>
+<!--===============================================================================================-->
+	<script src="../static/vendor/bootstrap/js/popper.js"></script>
+	<script src="../static/vendor/bootstrap/js/bootstrap.min.js"></script>
+<!--===============================================================================================-->
+	<script src="../static/vendor/select2/select2.min.js"></script>
+	<script>
+		$(".js-select2").each(function(){
+			$(this).select2({
+				minimumResultsForSearch: 20,
+				dropdownParent: $(this).next('.dropDownSelect2')
+			});
+		})
+		$(".js-select2").each(function(){
+			$(this).on('select2:open', function (e){
+				$(this).parent().next().addClass('eff-focus-selection');
+			});
+		});
+		$(".js-select2").each(function(){
+			$(this).on('select2:close', function (e){
+				$(this).parent().next().removeClass('eff-focus-selection');
+			});
+		});
+
+	</script>
+	<script>
+	$(document).ready(function () {
+		var data = document.getElementById('data').innerHTML ;
+		console.log(data);
+		console.log(document.getElementById("chartArea").style.display);
+		if(data=="[]")
+		{
+			document.getElementById("chartArea").style.display = "none";
+		}else {
+			document.getElementById("uplaod-area").style.display = "none";
+			document.getElementById("chartArea").style.display = "block";
+			console.log(data);
+			data=data.replace("[", "");
+			data=data.replace("]", "");
+			data=data.replace("'", "");
+			data=data.replace("'", "");
+			var arr=data.split(" ");
+			var ar1=arr.slice(0, 3);
+			var ar2=arr.slice(3, 6);
+			for (var i = 0; i < ar1.length; i++) {
+				ar1[i]=parseFloat(ar1[i]).toFixed(2)
+			}
+		var ctx = document.getElementById("myChart");
+	var myChart = new Chart(ctx, {
+	  type: 'bar',
+	  data: {
+	    labels:ar2,
+	    datasets: [{
+	      label: 'prediction results',
+	      data: ar1,
+	      backgroundColor: [
+	        'rgba(255, 99, 132, 0.2)',
+	        'rgba(54, 162, 235, 0.2)',
+	        'rgba(255, 206, 86, 0.2)'
+	      ],
+	      borderColor: [
+	        'rgba(255,99,132,1)',
+	        'rgba(54, 162, 235, 1)',
+	        'rgba(255, 206, 86, 1)'
+	      ],
+	      borderWidth: 1
+	    }]
+	  },
+	  options: {
+	    responsive: false,
+	    scales: {
+	      xAxes: [{
+	        ticks: {
+	          maxRotation: 90,
+	          minRotation: 80
+	        }
+	      }],
+	      yAxes: [{
+	        ticks: {
+	          beginAtZero: true
+	        }
+	      }]
+	    }
+	  }
+	});}
+	});
+
+	</script>
+
+<!--===============================================================================================-->
+	<script src="../static/vendor/daterangepicker/moment.min.js"></script>
+	<script src="../static/vendor/daterangepicker/daterangepicker.js"></script>
+<!--===============================================================================================-->
+	<script src="../static/vendor/countdowntime/countdowntime.js"></script>
+<!--===============================================================================================-->
+	<script src="../static/js/main.js"></script>
+	<!-- <script src="../static/js/chart.js"></script>
+	<script src="../static/js/chart-utils.js"></script> -->
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23581568-13"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+
+	  gtag('config', 'UA-23581568-13');
+	</script>
+</body>
+</html>
